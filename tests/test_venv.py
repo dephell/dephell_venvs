@@ -14,3 +14,6 @@ def test_create(temp_path):
     assert venv.lib_path.exists()
     assert venv.bin_path.exists()
     assert venv.python_path.exists()
+
+    venv.destroy()
+    assert venv.exists() is False
