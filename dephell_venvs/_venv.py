@@ -1,8 +1,9 @@
 # built-in
 import shutil
+import sys
 from itertools import chain
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 # external
 import attr
@@ -33,6 +34,8 @@ class VEnv:
             return self.project + '/' + self.env
         if self.project:
             return self.project
+        if self.env:
+            return self.env
         return self.path.name
 
     @cached_property
@@ -95,7 +98,9 @@ class VEnv:
         """
         return bool(self.bin_path)
 
-    def create(self, python_path) -> None:
+    def create(self, python_path: Union[Path, str, None] = None) -> None:
+        if python_path is None:
+            python_path = sys.executable
         builder = VEnvBuilder(
             python=str(python_path),
             with_pip=True,
@@ -106,6 +111,8 @@ class VEnv:
         # clear cache
         if 'bin_path' in self.__dict__:
             del self.__dict__['bin_path']
+        if 'lib_path' in self.__dict__:
+            del self.__dict__['lib_path']
         if 'python_path' in self.__dict__:
             del self.__dict__['python_path']
 
