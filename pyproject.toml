@@ -1,0 +1,27 @@
+[tool.dephell.main]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "setuppy", path = "setup.py"}
+
+[tool.poetry]
+name = "dephell_venvs"
+version = "0.1.0"
+authors = ["Gram <master_fess@mail.ru>"]
+description = "Manage virtual environments"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/dephell/dephell_venvs"
+keywords = ["dephell", "packaging", "venv", "pipenv", "virtualenv"]
+# https://pypi.org/classifiers/
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.5"
+attrs = "*"
+dephell_pythons = "*"
