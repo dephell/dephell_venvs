@@ -41,7 +41,7 @@ venv = venvs.get(project_path=Path('dephell_venvs'), env='pytest')
 
 ## Manage venv
 
-`VEnv` can be gotten from `VEnvs` ot created manually:
+`VEnv` can be got from `VEnvs` ot created manually:
 
 ```python
 venv = VEnv(path=Path('venv'))
@@ -77,3 +77,5 @@ venv.prompt
 venv.python
 # Python(path=PosixPath('dephell_venvs-njyT/pytest/bin/python3.7'), version='3.7.0', implementation='python', abstract=False)
 ```
+
+For details about `Python` object see [dephell_pythons](https://github.com/dephell/dephell_pythons).
