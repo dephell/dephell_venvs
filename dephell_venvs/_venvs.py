@@ -49,7 +49,18 @@ class VEnvs:
         return VEnv(path=path, project=name)
 
     def __iter__(self) -> Iterator[VEnv]:
-        for path in self.path.iterdir():
-            venv = VEnv(path=path)
+        root_path, sep, pattern = str(self.path).partition('{')
+
+        # if path for envs has no substitutions
+        if not sep:
+            venv = VEnv(path=self.path)
+            if venv.exists():
+                yield venv
+            return
+
+        # replace all substitutions by glob
+        pattern = (sep + pattern).format(project='*', digest='*', env='*')
+        for venv_path in Path(root_path).glob(pattern):
+            venv = VEnv(path=venv_path)
             if venv.exists():
                 yield venv
