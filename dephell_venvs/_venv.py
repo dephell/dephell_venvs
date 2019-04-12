@@ -17,7 +17,7 @@ from ._builder import VEnvBuilder
 
 @attr.s()
 class VEnv:
-    path = attr.ib(type=Path, converter=Path)
+    path = attr.ib(type=Path)
 
     project = attr.ib(type=str, default=None)
     env = attr.ib(type=str, default=None)
