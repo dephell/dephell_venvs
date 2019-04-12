@@ -15,7 +15,7 @@ from ._venv import VEnv
 
 @attr.s()
 class VEnvs:
-    path = attr.ib(type=Path, converter=Path)
+    path = attr.ib(type=Path)
 
     @cached_property
     def current(self) -> Optional[VEnv]:
