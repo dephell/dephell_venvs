@@ -22,6 +22,11 @@ class VEnv:
     project = attr.ib(type=str, default=None)
     env = attr.ib(type=str, default=None)
 
+    def __attrs_post_init__(self):
+        # `Path` as `converter` doesn't work for Python 3.5
+        if type(self.path) is str:
+            self.path = Path(self.path)
+
     # properties
 
     @property

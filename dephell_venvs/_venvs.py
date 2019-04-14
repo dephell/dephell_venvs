@@ -17,6 +17,11 @@ from ._venv import VEnv
 class VEnvs:
     path = attr.ib(type=Path)
 
+    def __attrs_post_init__(self):
+        # `Path` as `converter` doesn't work for Python 3.5
+        if type(self.path) is str:
+            self.path = Path(self.path)
+
     @cached_property
     def current(self) -> Optional[VEnv]:
         if 'VIRTUAL_ENV' in os.environ:
