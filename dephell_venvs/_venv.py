@@ -57,11 +57,18 @@ class VEnv:
 
     @cached_property
     def lib_path(self) -> Optional[Path]:
+        # pypy
+        path = self.path / 'site-packages'
+        if path.exists():
+            return path
+
+        # win
         if IS_WINDOWS:
             path = self.path / 'Lib' / 'site-packages'
             if path.exists():
                 return path
 
+        # cpython unix
         path = self.path / 'lib'
         paths = list(path.glob('python*'))
         if not paths:

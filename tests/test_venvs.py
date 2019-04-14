@@ -5,13 +5,13 @@ def test_get(temp_path):
     venvs = VEnvs(path=temp_path / 'venvs' / '{project}' / '{env}')
     (temp_path / 'papa').mkdir()
     venv = venvs.get(project_path=temp_path / 'papa', env='emeritus')
-    assert venv.path == temp_path / 'venvs' / 'papa' / 'emeritus'
+    assert str(venv.path) == str(temp_path / 'venvs' / 'papa' / 'emeritus')
 
 
 def test_get_by_name(temp_path):
     venvs = VEnvs(path=temp_path / 'venvs' / '{project}' / '{env}')
     venv = venvs.get_by_name(name='papa')
-    assert venv.path == temp_path / 'venvs' / 'papa'
+    assert str(venv.path) == str(temp_path / 'venvs' / 'papa')
 
 
 def test_iter(temp_path):
@@ -24,4 +24,4 @@ def test_iter(temp_path):
     venv2 = venvs.get_by_name(name='ghost')
     venv2.create()
 
-    assert {venv.path for venv in venvs} == {venv1.path, venv2.path}
+    assert {str(venv.path) for venv in venvs} == {str(venv1.path), str(venv2.path)}
