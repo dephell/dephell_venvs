@@ -82,13 +82,15 @@ class VEnv:
     def python_path(self) -> Optional[Path]:
         if self.bin_path is None:
             return None
-        for suffix in chain(PYTHONS, ['']):
-            for ext in ('', '.exe'):
-                path = self.bin_path / ('python' + suffix)
-                if ext:
-                    path = path.with_suffix(ext)
-                if path.exists():
-                    return path
+        executables = {path.name for path in self.bin_path.iterdir()}
+        for implementation in ('pypy', 'python'):
+            for suffix in chain(PYTHONS, ['']):
+                for ext in ('', '.exe'):
+                    path = self.bin_path / (implementation + suffix)
+                    if ext:
+                        path = path.with_suffix(ext)
+                    if path.name in executables:
+                        return path
         return None
 
     @cached_property
