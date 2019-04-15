@@ -7,6 +7,7 @@ from venv import EnvBuilder
 
 # external
 import attr
+from dephell_pythons import Finder
 
 
 @attr.s()
@@ -20,13 +21,47 @@ class VEnvBuilder(EnvBuilder):
     prompt = attr.ib(type=str, default=None)
     python = attr.ib(type=Optional[str], default=None)  # path to the python interpreter
 
+    def get_python(self) -> str:
+        # if not venv then it's OK
+        config_path = Path(self.python).parent.parent / 'pyvenv.cfg'
+        if not config_path.exists():
+            return self.python
+
+        # try to get home from venv config
+        lib_path = None
+        for line in config_path.read_text().splitlines():
+            if line.startswith('home'):
+                lib_path = line.split('=', 1)[1].strip()
+        if not lib_path:
+            return self.python
+
+        # try to get python with the same name from real home
+        python = Path(lib_path) / Path(self.python).name
+        if python.exists():
+            return str(python)
+
+        # try to find python in real home
+        finder = Finder()
+        paths = list(finder.get_pythons(paths=[python.parent]))
+        if not paths:
+            raise LookupError('cannot find pythons in ' + str(python.parent))
+        if len(paths) == 1:
+            return str(paths[0])
+
+        # get from these pythons python with the same version
+        version = finder.get_version(Path(self.python))
+        for path in paths:
+            if finder.get_version(path) == version:
+                return str(path)
+        raise LookupError('cannot choose python in ' + str(python.parent))
+
     def ensure_directories(self, env_dir):
         context = super().ensure_directories(env_dir)
         if self.python is None:
             return context
 
-        context.executable = self.python
-        context.python_dir, context.python_exe = os.path.split(self.python)
+        context.executable = self.get_python()
+        context.python_dir, context.python_exe = os.path.split(context.executable)
         context.env_exe = os.path.join(context.bin_path, context.python_exe)
         return context
 
@@ -44,7 +79,7 @@ class VEnvBuilder(EnvBuilder):
 
         # copy pypy libs
         for libname in ('libpypy3-c.so', 'libpypy3-c.dylib'):
-            src_library = Path(context.executable).parent / libname
+            src_library = Path(context.executable).resolve().parent / libname
             if not src_library.exists():
                 continue
 
