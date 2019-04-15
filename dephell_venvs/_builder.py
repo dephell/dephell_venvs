@@ -1,8 +1,9 @@
 # built-in
 import os
+import subprocess
+from pathlib import Path
 from typing import Optional
 from venv import EnvBuilder
-from pathlib import Path
 
 # external
 import attr
@@ -54,3 +55,10 @@ class VEnvBuilder(EnvBuilder):
             self.symlink_or_copy(str(src_library), str(dest_library))
             if not dest_library.is_symlink():
                 dest_library.chmod(0o755)
+
+    def _setup_pip(self, context) -> None:
+        cmd = [context.env_exe, '-Im', 'ensurepip', '--upgrade', '--default-pip']
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            output = result.stdout.decode() + '\n\n' + result.stderr.decode()
+            raise OSError(output)
