@@ -69,6 +69,11 @@ class VEnv:
                 return path
 
         # cpython unix
+        path = self.path / 'lib' / self.python_path.name / 'site-packages'
+        if path.exists():
+            return path
+
+        # cpython unix when python_path detected not so good
         path = self.path / 'lib'
         paths = list(path.glob('python*'))
         if not paths:
