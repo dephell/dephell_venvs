@@ -22,7 +22,7 @@ class VEnv:
     project = attr.ib(type=str, default=None)
     env = attr.ib(type=str, default=None)
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         # `Path` as `converter` doesn't work for Python 3.5
         if type(self.path) is str:
             self.path = Path(self.path)
@@ -30,7 +30,7 @@ class VEnv:
     # properties
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.path.name
 
     @property
@@ -69,9 +69,10 @@ class VEnv:
                 return path
 
         # cpython unix
-        path = self.path / 'lib' / self.python_path.name / 'site-packages'
-        if path.exists():
-            return path
+        if self.python_path is not None:
+            path = self.path / 'lib' / self.python_path.name / 'site-packages'
+            if path.exists():
+                return path
 
         # cpython unix when python_path detected not so good
         path = self.path / 'lib'
