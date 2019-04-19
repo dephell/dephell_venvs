@@ -13,7 +13,7 @@ def test_create(temp_path):
     assert venv.exists() is True
     assert venv.lib_path.exists()
     assert venv.bin_path.exists()
-    assert (venv.bin_path / 'pip').exists()
+    assert (venv.bin_path / 'pip').exists() or (venv.bin_path / 'pip.exe').exists()
     assert venv.python_path.exists()
 
     venv.destroy()
