@@ -1,6 +1,7 @@
 # built-in
 import os
 import subprocess
+import sys
 from pathlib import Path
 from typing import Optional
 from venv import EnvBuilder
@@ -22,6 +23,9 @@ class VEnvBuilder(EnvBuilder):
     python = attr.ib(type=Optional[str], default=None)  # path to the python interpreter
 
     def get_python(self) -> str:
+        if self.python is None:
+            return sys.executable
+
         # if not venv then it's OK
         config_path = Path(self.python).parent.parent / 'pyvenv.cfg'
         if not config_path.exists():

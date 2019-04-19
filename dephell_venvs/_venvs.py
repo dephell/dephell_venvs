@@ -25,7 +25,7 @@ class VEnvs:
     @cached_property
     def current(self) -> Optional[VEnv]:
         if 'VIRTUAL_ENV' in os.environ:
-            return VEnv(path=os.environ['VIRTUAL_ENV'])
+            return VEnv(path=Path(os.environ['VIRTUAL_ENV']))
         # TODO: CONDA_PREFIX?
         return None
 
