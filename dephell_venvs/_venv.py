@@ -104,7 +104,7 @@ class VEnv:
         python = Python(
             path=self.python_path,
             version=Finder.get_version(path=self.python_path),
-            implementation=Finder.get_implementation(path=self.python_path)
+            implementation=Finder.get_implementation(path=self.python_path),
         )
         python.lib_paths = [self.lib_path]
         return python
