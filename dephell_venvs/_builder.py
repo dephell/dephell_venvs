@@ -1,7 +1,9 @@
 # built-in
 import os
 import subprocess
+import sys
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Optional
 from venv import EnvBuilder
 
@@ -22,6 +24,9 @@ class VEnvBuilder(EnvBuilder):
     python = attr.ib(type=Optional[str], default=None)  # path to the python interpreter
 
     def get_python(self) -> str:
+        if self.python is None:
+            return sys.executable
+
         # if not venv then it's OK
         config_path = Path(self.python).parent.parent / 'pyvenv.cfg'
         if not config_path.exists():
@@ -55,7 +60,7 @@ class VEnvBuilder(EnvBuilder):
                 return str(path)
         raise LookupError('cannot choose python in ' + str(python.parent))
 
-    def ensure_directories(self, env_dir):
+    def ensure_directories(self, env_dir: str) -> SimpleNamespace:
         context = super().ensure_directories(env_dir)
         if self.python is None:
             return context
@@ -65,7 +70,7 @@ class VEnvBuilder(EnvBuilder):
         context.env_exe = os.path.join(context.bin_path, context.python_exe)
         return context
 
-    def setup_python(self, context) -> None:
+    def setup_python(self, context: SimpleNamespace) -> None:
         """
         Set up a Python executable in the environment.
 
@@ -91,7 +96,7 @@ class VEnvBuilder(EnvBuilder):
             if not dest_library.is_symlink():
                 dest_library.chmod(0o755)
 
-    def _setup_pip(self, context) -> None:
+    def _setup_pip(self, context: SimpleNamespace) -> None:
         cmd = [context.env_exe, '-Im', 'ensurepip', '--upgrade', '--default-pip']
         result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:

@@ -1,10 +1,14 @@
 ## Dephell VEnvs
 
+[![travis](https://travis-ci.org/dephell/dephell_venvs.svg?branch=master)](https://travis-ci.org/dephell/dephell_venvs)
+[![appveyor](https://ci.appveyor.com/api/projects/status/github/dephell/dephell_venvs?svg=true)](https://ci.appveyor.com/project/orsinium/dephell-venvs)
+[![MIT License](https://img.shields.io/pypi/l/dephell-venvs.svg)](https://github.com/dephell/dephell_venvs/blob/master/LICENSE)
+
 Manage Python virtual environments.
 
 ## Installation
 
-Install from [PyPI](https://pypi.org/project/dephell-pythons):
+Install from [PyPI](https://pypi.org/project/dephell-venvs):
 
 ```bash
 python3 -m pip install --user dephell_venvs
