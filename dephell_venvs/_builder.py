@@ -39,17 +39,13 @@ class VEnvBuilder(EnvBuilder):
                 lib_path = line.split('=', 1)[1].strip()
         if not lib_path:
             return self.python
-
-        # try to get python with the same name from real home
-        python = Path(lib_path) / Path(self.python).name
-        if python.exists():
-            return str(python)
+        lib_path = Path(lib_path)
 
         # try to find python in real home
         finder = Finder()
-        paths = list(finder.get_pythons(paths=[python.parent]))
+        paths = list(finder.get_pythons(paths=[lib_path]))
         if not paths:
-            raise LookupError('cannot find pythons in ' + str(python.parent))
+            raise LookupError('cannot find pythons in ' + str(lib_path))
         if len(paths) == 1:
             return str(paths[0])
 
@@ -58,7 +54,7 @@ class VEnvBuilder(EnvBuilder):
         for path in paths:
             if finder.get_version(path) == version:
                 return str(path)
-        raise LookupError('cannot choose python in ' + str(python.parent))
+        raise LookupError('cannot choose python in ' + str(lib_path))
 
     def ensure_directories(self, env_dir: str) -> SimpleNamespace:
         context = super().ensure_directories(env_dir)
