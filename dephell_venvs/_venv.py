@@ -101,10 +101,11 @@ class VEnv:
 
     @cached_property
     def python(self) -> Python:
+        finder = Finder()
         python = Python(
             path=self.python_path,
-            version=Finder.get_version(path=self.python_path),
-            implementation=Finder.get_implementation(path=self.python_path),
+            version=finder.get_version(path=self.python_path),
+            implementation=finder.get_implementation(path=self.python_path),
         )
         python.lib_paths = [self.lib_path]
         return python
