@@ -32,6 +32,7 @@ init:
 install:
   - "%PYTHON%/Scripts/pip.exe install pytest"
   - "%PYTHON%/Scripts/pip.exe install attrs"
+  - "%PYTHON%/Scripts/pip.exe install requests"
   - "%PYTHON%/Scripts/pip.exe install dephell-pythons"
 
 test_script:
