@@ -58,11 +58,10 @@ class VEnvBuilder(EnvBuilder):
                 return str(path)
 
         # get from these pythons python with the same major.minor version
-        version = '.'.join(version.split('.')[:2])
+        major, minor, *_ = version.split('.')
         for path in paths:
-            bin_version = finder.get_version(path)
-            bin_version = '.'.join(bin_version.split('.')[:2])
-            if bin_version == version:
+            bmajor, bminor, *_ = finder.get_version(path).split('.')
+            if bmajor == major and bminor == minor:
                 return str(path)
 
         raise LookupError('cannot choice python in ' + str(lib_path))
