@@ -4,7 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Optional
+from typing import Dict, Optional
 from venv import EnvBuilder
 
 # external
@@ -104,7 +104,7 @@ class VEnvBuilder(EnvBuilder):
 
     def _setup_pip(self, context: SimpleNamespace) -> None:
         # make environment
-        env = {}
+        env = {}    # type: Dict[str, str]
         # https://github.com/appveyor/ci/issues/1995
         env.update(os.environ)
         for name in env.copy():
