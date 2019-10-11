@@ -1,6 +1,7 @@
 language: python
 
 before_install:
+  - ls /opt/python/
   # show a little bit more information about environment
   - sudo apt-get install -y tree
   - env
