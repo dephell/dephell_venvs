@@ -103,11 +103,17 @@ class VEnvBuilder(EnvBuilder):
                 dest_library.chmod(0o755)
 
     def _setup_pip(self, context: SimpleNamespace) -> None:
+        # make environment
         env = {}
         # https://github.com/appveyor/ci/issues/1995
         env.update(os.environ)
+        for name in env.copy():
+            if name.startswith('PYTHON'):
+                del env[name]
         if not native_ensurepip_exists():
             env['PYTHONPATH'] = str(get_path().parent)
+
+        # run
         result = subprocess.run(
             [context.env_exe, '-sm', 'ensurepip', '--upgrade', '--default-pip'],
             stdout=subprocess.PIPE,
