@@ -11,6 +11,8 @@ from venv import EnvBuilder
 import attr
 from dephell_pythons import Finder
 
+from ._ensurepip import get_path, native_ensurepip_exists
+
 
 @attr.s()
 class VEnvBuilder(EnvBuilder):
@@ -93,8 +95,15 @@ class VEnvBuilder(EnvBuilder):
                 dest_library.chmod(0o755)
 
     def _setup_pip(self, context: SimpleNamespace) -> None:
-        cmd = [context.env_exe, '-Im', 'ensurepip', '--upgrade', '--default-pip']
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        env = {}
+        if not native_ensurepip_exists():
+            env['PYTHONPATH'] = str(get_path().parent)
+        result = subprocess.run(
+            [context.env_exe, '-sm', 'ensurepip', '--upgrade', '--default-pip'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env,
+        )
         if result.returncode != 0:
             output = result.stdout.decode() + '\n\n' + result.stderr.decode()
             raise OSError(output)
