@@ -104,6 +104,8 @@ class VEnvBuilder(EnvBuilder):
 
     def _setup_pip(self, context: SimpleNamespace) -> None:
         env = {}
+        # https://github.com/appveyor/ci/issues/1995
+        env.update(os.environ)
         if not native_ensurepip_exists():
             env['PYTHONPATH'] = str(get_path().parent)
         result = subprocess.run(
