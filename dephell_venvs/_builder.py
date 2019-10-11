@@ -4,12 +4,14 @@ import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Optional
+from typing import Dict, Optional
 from venv import EnvBuilder
 
 # external
 import attr
 from dephell_pythons import Finder
+
+from ._ensurepip import get_path, native_ensurepip_exists
 
 
 @attr.s()
@@ -54,7 +56,15 @@ class VEnvBuilder(EnvBuilder):
         for path in paths:
             if finder.get_version(path) == version:
                 return str(path)
-        raise LookupError('cannot choose python in ' + str(lib_path))
+
+        # get from these pythons python with the same major.minor version
+        major, minor, *_ = version.split('.')
+        for path in paths:
+            bmajor, bminor, *_ = finder.get_version(path).split('.')
+            if bmajor == major and bminor == minor:
+                return str(path)
+
+        raise LookupError('cannot choice python in ' + str(lib_path))
 
     def ensure_directories(self, env_dir: str) -> SimpleNamespace:
         context = super().ensure_directories(env_dir)
@@ -93,8 +103,23 @@ class VEnvBuilder(EnvBuilder):
                 dest_library.chmod(0o755)
 
     def _setup_pip(self, context: SimpleNamespace) -> None:
-        cmd = [context.env_exe, '-Im', 'ensurepip', '--upgrade', '--default-pip']
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # make environment
+        env = {}    # type: Dict[str, str]
+        # https://github.com/appveyor/ci/issues/1995
+        env.update(os.environ)
+        for name in env.copy():
+            if name.startswith('PYTHON'):
+                del env[name]
+        if not native_ensurepip_exists():
+            env['PYTHONPATH'] = str(get_path().parent)
+
+        # run
+        result = subprocess.run(
+            [context.env_exe, '-sm', 'ensurepip', '--upgrade', '--default-pip'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env,
+        )
         if result.returncode != 0:
             output = result.stdout.decode() + '\n\n' + result.stderr.decode()
             raise OSError(output)

@@ -11,3 +11,11 @@ def temp_path(tmp_path: Path):
         else:
             shutil.rmtree(str(path))
     yield tmp_path
+
+
+@pytest.fixture(autouse=True)
+def drop_ensurepip():
+    yield
+    path = Path(__file__).parent.parent / 'dephell_venvs' / 'ensurepip'
+    if path.exists():
+        shutil.rmtree(str(path))
