@@ -52,4 +52,4 @@ classifiers = [
 python = ">=3.5"
 attrs = "*"
 dephell-pythons = "*"
-
+requests = "*"
