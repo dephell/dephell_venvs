@@ -56,7 +56,16 @@ class VEnvBuilder(EnvBuilder):
         for path in paths:
             if finder.get_version(path) == version:
                 return str(path)
-        raise LookupError('cannot choose python in ' + str(lib_path))
+
+        # get from these pythons python with the same major.minor version
+        version = '.'.join(version.split('.')[:2])
+        for path in paths:
+            bin_version = finder.get_version(path)
+            bin_version = '.'.join(bin_version.split('.')[:2])
+            if bin_version == version:
+                return str(path)
+
+        raise LookupError('cannot choice python in ' + str(lib_path))
 
     def ensure_directories(self, env_dir: str) -> SimpleNamespace:
         context = super().ensure_directories(env_dir)
