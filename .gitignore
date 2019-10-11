@@ -15,3 +15,4 @@ pip-wheel-metadata/
 
 README.rst
 setup.py
+/dephell_venvs/ensurepip/
