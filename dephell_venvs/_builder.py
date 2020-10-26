@@ -21,6 +21,7 @@ class VEnvBuilder(EnvBuilder):
     symlinks = attr.ib(type=bool, default=False)
     upgrade = attr.ib(type=bool, default=False)
     with_pip = attr.ib(type=bool, default=False)
+    upgrade_deps = attr.ib(type=bool, default=False)
 
     prompt = attr.ib(type=str, default=None)
     python = attr.ib(type=Optional[str], default=None)  # path to the python interpreter
