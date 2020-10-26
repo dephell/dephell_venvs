@@ -26,14 +26,14 @@ matrix:
       env: ENV=pytest
     - python: "3.6.7"
       env: ENV=pytest
-    - python: "3.7"
+    - python: "3.7.1"
       env: ENV=pytest
-    - python: "3.8-dev"
+    - python: "3.8"
       env: ENV=pytest
     - python: "pypy3.5"
       env: ENV=pytest
 
-    - python: "3.7"
+    - python: "3.7.1"
       env: ENV=flake8
-    - python: "3.7"
+    - python: "3.7.1"
       env: ENV=typing
