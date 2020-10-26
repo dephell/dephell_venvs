@@ -19,7 +19,7 @@ command = "mypy --ignore-missing-imports --allow-redefinition dephell_venvs"
 
 [tool.poetry]
 name = "dephell_venvs"
-version = "0.1.17"
+version = "0.1.18"
 authors = ["Gram <master_fess@mail.ru>"]
 description = "Manage virtual environments"
 readme = "README.md"
