@@ -67,7 +67,7 @@ class VEnvBuilder(EnvBuilder):
 
         raise LookupError('cannot choice python in ' + str(lib_path))
 
-    def ensure_directories(self, env_dir: str) -> SimpleNamespace:
+    def ensure_directories(self, env_dir: str) -> SimpleNamespace:  # type: ignore
         context = super().ensure_directories(env_dir)
         if self.python is None:
             return context
